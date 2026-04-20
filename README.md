@@ -12,8 +12,11 @@ cd ~/dotfiles
 
 The install script will:
 1. Install `stow` if missing
-2. Symlink all config packages into `$HOME`
-3. Clone the [nvim config](https://github.com/Iwan-Dyke/nvim-config.git) if not present
+2. Move any pre-existing real files that would conflict into `~/.dotfiles-backup-<timestamp>/`
+3. Symlink all config packages into `$HOME`
+4. Clone [nvim config](https://github.com/Iwan-Dyke/nvim-config.git), or hard-reset it to `origin/main` if already cloned (repo is source of truth)
+
+Uninstall with `./install.sh -D` to remove all stow symlinks (nvim is left alone).
 
 ## Packages
 
@@ -27,7 +30,6 @@ The install script will:
 | `lazydocker` | `~/.config/lazydocker/` | Docker TUI |
 | `tmux` | `~/.tmux.conf` | Terminal multiplexer |
 | `git` | `~/.gitconfig` | Git config (rebase, rerere, credential helpers) |
-| `kiro-cli` | `~/.config/kiro-cli/` | MCP server config |
 
 ## Usage
 
