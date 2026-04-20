@@ -1,0 +1,6 @@
+# Yazi keymap overrides
+
+[[mgr.prepend_keymap]]
+on   = ["E"]
+run  = 'shell "nvim $0" --block --confirm'
+desc = "Open directory/file in Neovim"
