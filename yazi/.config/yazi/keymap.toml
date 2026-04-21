@@ -4,3 +4,8 @@
 on   = ["E"]
 run  = 'shell "nvim $0" --block --confirm'
 desc = "Open directory/file in Neovim"
+
+[[mgr.prepend_keymap]]
+on   = ["T"]
+run  = 'shell "tmux new-window -c $0" --confirm'
+desc = "Open new tmux window in current directory"
