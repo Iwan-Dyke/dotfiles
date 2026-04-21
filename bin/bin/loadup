@@ -1,7 +1,12 @@
 #!/bin/bash
 # Load up the construct
 
-SESSION="general"
+SESSION="${1:-general}"
+
+case "$SESSION" in
+    general|work) ;;
+    *) echo "usage: loadup [general|work]" >&2; exit 1 ;;
+esac
 
 # If session already exists, just attach
 tmux has-session -t "$SESSION" 2>/dev/null && {
@@ -11,14 +16,25 @@ tmux has-session -t "$SESSION" 2>/dev/null && {
 
 # Build the session
 tmux new-session -d -s "$SESSION" -n "terminal"
-tmux new-window -t "$SESSION" -n "kiro"
+
+if [ "$SESSION" = "work" ]; then
+    tmux new-window -t "$SESSION" -n "kiro"
+else
+    tmux new-window -t "$SESSION" -n "claude"
+fi
+
 tmux new-window -t "$SESSION" -n "yazi"
 tmux new-window -t "$SESSION" -n "docker"
 
 # Let shells initialise
 sleep 1
 
-tmux send-keys -t "$SESSION:kiro" 'kiro-cli chat' Enter
+if [ "$SESSION" = "work" ]; then
+    tmux send-keys -t "$SESSION:kiro" 'kiro-cli chat' Enter
+else
+    tmux send-keys -t "$SESSION:claude" 'claude' Enter
+fi
+
 tmux send-keys -t "$SESSION:yazi" 'yazi' Enter
 tmux send-keys -t "$SESSION:docker" 'lazydocker' Enter
 
