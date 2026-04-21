@@ -2,7 +2,7 @@
 set -euo pipefail
 
 DOTFILES_DIR="$(cd "$(dirname "$0")" && pwd)"
-PACKAGES=(yazi starship eza fish lazygit lazydocker tmux git)
+PACKAGES=(yazi starship eza fish lazygit lazydocker tmux git bin)
 NVIM_REPO="https://github.com/Iwan-Dyke/nvim-config.git"
 BACKUP_DIR="$HOME/.dotfiles-backup-$(date +%Y%m%d-%H%M%S)"
 

@@ -1,0 +1,27 @@
+#!/bin/bash
+# Load up the construct
+
+SESSION="general"
+
+# If session already exists, just attach
+tmux has-session -t "$SESSION" 2>/dev/null && {
+    tmux attach -t "$SESSION"
+    exit 0
+}
+
+# Build the session
+tmux new-session -d -s "$SESSION" -n "terminal"
+tmux new-window -t "$SESSION" -n "kiro"
+tmux new-window -t "$SESSION" -n "yazi"
+tmux new-window -t "$SESSION" -n "docker"
+
+# Let shells initialise
+sleep 1
+
+tmux send-keys -t "$SESSION:kiro" 'kiro-cli chat' Enter
+tmux send-keys -t "$SESSION:yazi" 'yazi' Enter
+tmux send-keys -t "$SESSION:docker" 'lazydocker' Enter
+
+# Start on the terminal window
+tmux select-window -t "$SESSION:terminal"
+tmux attach -t "$SESSION"
