@@ -14,28 +14,34 @@ tmux has-session -t "$SESSION" 2>/dev/null && {
     exit 0
 }
 
+# Credential env files (outside repo, 600 perms)
+CLAUDE_ENV="$HOME/.config/claude/${SESSION/general/home}.env"
+
 # Build the session
-tmux new-session -d -s "$SESSION" -n "terminal"
-
 if [ "$SESSION" = "work" ]; then
+    tmux new-session -d -s "$SESSION" -n "jira"
+    tmux new-window -t "$SESSION" -n "yazi"
     tmux new-window -t "$SESSION" -n "kiro"
-    tmux new-window -t "$SESSION" -n "jira"
-else
     tmux new-window -t "$SESSION" -n "claude"
+    tmux new-window -t "$SESSION" -n "terminal"
+    tmux new-window -t "$SESSION" -n "docker"
+else
+    tmux new-session -d -s "$SESSION" -n "terminal"
+    tmux new-window -t "$SESSION" -n "claude"
+    tmux new-window -t "$SESSION" -n "yazi"
+    tmux new-window -t "$SESSION" -n "docker"
 fi
-
-tmux new-window -t "$SESSION" -n "yazi"
-tmux new-window -t "$SESSION" -n "docker"
 
 # Let shells initialise
 sleep 1
 
+# Claude with session-appropriate credentials
+tmux send-keys -t "$SESSION:claude" "source $CLAUDE_ENV && claude" Enter
+
 if [ "$SESSION" = "work" ]; then
     tmux send-keys -t "$SESSION:kiro" 'kiro-cli chat' Enter
-    tmux split-window -t "$SESSION:jira" -v -l 15%
+    tmux split-window -t "$SESSION:jira" -v -l 10%
     tmux send-keys -t "$SESSION:jira.0" 'jiratui ui' Enter
-else
-    tmux send-keys -t "$SESSION:claude" 'claude' Enter
 fi
 
 tmux send-keys -t "$SESSION:yazi" 'yazi' Enter
