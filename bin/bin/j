@@ -40,7 +40,7 @@ create_issue() {
     [ -z "$summary" ] && { echo "usage: j ${type,,} \"summary\" [\"description\"]" >&2; exit 1; }
 
     local args=(-p"$PROJECT" -t"$type" -s"$summary" -a"$ASSIGNEE" -lGetSith --no-input)
-    [ -n "$body" ] && args+=(-b"$body")
+    [ -n "$body" ] && args+=(-b"$(printf '%b' "$body")")
     args+=("${extra_args[@]}")
 
     jira issue create "${args[@]}"
@@ -64,7 +64,7 @@ case "${1:-}" in
     all)    jira issue list -pMSB -a"$ASSIGNEE" -s~Completed -s~Discarded -s~Done ;;
     view)    jira issue view "$2" ;;
     open)    jira open "$2" ;;
-    comment) jira issue comment add "$2" "$3" ;;
+    comment) jira issue comment add "$2" "$(printf '%b' "$3")" ;;
     ls)     jira issue list -pMSB "${@:2}" ;;
 
     raw)    jira "${@:2}" ;;
