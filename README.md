@@ -29,6 +29,7 @@ Uninstall with `./install.sh -D` to remove all stow symlinks (nvim is left alone
 | `lazygit` | `~/.config/lazygit/` | Git TUI |
 | `lazydocker` | `~/.config/lazydocker/` | Docker TUI |
 | `tmux` | `~/.tmux.conf` | Terminal multiplexer |
+| `bash` | `~/.bashrc` | Shell config — aliases, prompt, Matrix theme |
 | `git` | `~/.gitconfig` | Git config (rebase, rerere, credential helpers) |
 
 ## Usage
