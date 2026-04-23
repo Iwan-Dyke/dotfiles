@@ -302,3 +302,6 @@ sudo service cron status > /dev/null 2>&1 || sudo service cron start > /dev/null
 
 # Jira credentials (shared by jiratui and jira-cli)
 [ -f ~/.config/jira/credentials ] && source ~/.config/jira/credentials
+
+# Claude CLI auth (work)
+[ -f ~/.config/claude/work.env ] && source ~/.config/claude/work.env
