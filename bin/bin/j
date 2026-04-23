@@ -10,9 +10,9 @@ usage() {
 j — Jira workflow shortcuts
 
 CREATE
-  j new   "summary" ["description"]     Create a Task assigned to you
-  j story "summary" ["description"]     Create a Story assigned to you
-  j bug   "summary" ["description"]     Create a Bug (High priority)
+  j new   "summary" ["description"]     Create a Story assigned to you
+  j feat  "summary" ["description"]     Create a Feature assigned to you
+  j bug   "summary" ["description"]     Create a Defect Story (High priority)
   j spike "summary" ["description"]     Create a Spike assigned to you
   j sub   "summary" PARENT-KEY          Create a Sub-task under a parent
 
@@ -46,10 +46,10 @@ create_issue() {
 }
 
 case "${1:-}" in
-    new)    create_issue "Task"  "$2" "$3" ;;
-    story)  create_issue "Story" "$2" "$3" ;;
-    bug)    create_issue "Bug"   "$2" "$3" -yHigh ;;
-    spike)  create_issue "Spike" "$2" "$3" ;;
+    new)    create_issue "Story"         "$2" "$3" ;;
+    feat)   create_issue "Feature"       "$2" "$3" ;;
+    bug)    create_issue "Defect Story"  "$2" "$3" -yHigh ;;
+    spike)  create_issue "Spike"         "$2" "$3" ;;
     sub)
         [ -z "${3:-}" ] && { echo "usage: j sub \"summary\" PARENT-KEY" >&2; exit 1; }
         create_issue "Sub-task" "$2" "" -P"$3"
