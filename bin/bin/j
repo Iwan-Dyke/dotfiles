@@ -1,0 +1,71 @@
+#!/bin/bash
+# j — Jira CLI shortcuts with team defaults
+# Wraps jira-cli (ankitpokhrel) for the MSB project
+
+PROJECT="MSB"
+ASSIGNEE="iwan.dyke@dvla.gov.uk"
+
+usage() {
+    cat <<'EOF'
+j — Jira workflow shortcuts
+
+CREATE
+  j new   "summary" ["description"]     Create a Task assigned to you
+  j story "summary" ["description"]     Create a Story assigned to you
+  j bug   "summary" ["description"]     Create a Bug (High priority)
+  j spike "summary" ["description"]     Create a Spike assigned to you
+  j sub   "summary" PARENT-KEY          Create a Sub-task under a parent
+
+WORKFLOW
+  j todo  KEY                           Move issue to "To Do"
+  j start KEY                           Move issue to "In Progress"
+  j done  KEY                           Move issue to "Completed"
+
+VIEW
+  j mine                                Your current sprint issues
+  j all                                 All your open issues
+  j view  KEY                           View issue details
+  j open  KEY                           Open issue in browser
+
+SEARCH
+  j ls [text]                           List/search issues
+
+Pass-through: j raw <any jira args>    Run raw jira command
+EOF
+}
+
+create_issue() {
+    local type="$1" summary="$2" body="${3:-}" extra_args=("${@:4}")
+    [ -z "$summary" ] && { echo "usage: j ${type,,} \"summary\" [\"description\"]" >&2; exit 1; }
+
+    local args=(-p"$PROJECT" -t"$type" -s"$summary" -a"$ASSIGNEE" --no-input)
+    [ -n "$body" ] && args+=(-b"$body")
+    args+=("${extra_args[@]}")
+
+    jira issue create "${args[@]}"
+}
+
+case "${1:-}" in
+    new)    create_issue "Task"  "$2" "$3" ;;
+    story)  create_issue "Story" "$2" "$3" ;;
+    bug)    create_issue "Bug"   "$2" "$3" -yHigh ;;
+    spike)  create_issue "Spike" "$2" "$3" ;;
+    sub)
+        [ -z "${3:-}" ] && { echo "usage: j sub \"summary\" PARENT-KEY" >&2; exit 1; }
+        create_issue "Sub-task" "$2" "" -P"$3"
+        ;;
+
+    todo)   jira issue move "$2" "To Do" ;;
+    start)  jira issue move "$2" "In Progress" ;;
+    done)   jira issue move "$2" "Completed" ;;
+
+    mine)   jira issue list -pMSB -a"$ASSIGNEE" -q"sprint in openSprints()" ;;
+    all)    jira issue list -pMSB -a"$ASSIGNEE" -s~Completed -s~Discarded -s~Done ;;
+    view)   jira issue view "$2" ;;
+    open)   jira open "$2" ;;
+    ls)     jira issue list -pMSB "${@:2}" ;;
+
+    raw)    jira "${@:2}" ;;
+    -h|--help|"") usage ;;
+    *)      echo "Unknown command: $1 (try j --help)" >&2; exit 1 ;;
+esac
