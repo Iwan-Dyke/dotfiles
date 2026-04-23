@@ -26,6 +26,7 @@ VIEW
   j all                                 All your open issues
   j view  KEY                           View issue details
   j open  KEY                           Open issue in browser
+  j comment KEY "text"                  Add a comment to an issue
 
 SEARCH
   j ls [text]                           List/search issues
@@ -61,8 +62,9 @@ case "${1:-}" in
 
     mine)   jira issue list -pMSB -a"$ASSIGNEE" -q"sprint in openSprints()" ;;
     all)    jira issue list -pMSB -a"$ASSIGNEE" -s~Completed -s~Discarded -s~Done ;;
-    view)   jira issue view "$2" ;;
-    open)   jira open "$2" ;;
+    view)    jira issue view "$2" ;;
+    open)    jira open "$2" ;;
+    comment) jira issue comment add "$2" "$3" ;;
     ls)     jira issue list -pMSB "${@:2}" ;;
 
     raw)    jira "${@:2}" ;;
