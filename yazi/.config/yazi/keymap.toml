@@ -2,10 +2,10 @@
 
 [[mgr.prepend_keymap]]
 on   = ["E"]
-run  = 'shell "nvim $0" --block --confirm'
-desc = "Open directory/file in Neovim"
+run  = '''shell 'dir="$@"; [ -f "$dir" ] && dir="$(dirname "$dir")"; tmux new-window -c "$dir" nvim' --confirm'''
+desc = "Open new tmux window with Neovim in target directory"
 
 [[mgr.prepend_keymap]]
 on   = ["T"]
-run  = 'shell "tmux new-window -c $0" --confirm'
-desc = "Open new tmux window in current directory"
+run  = '''shell 'dir="$@"; [ -f "$dir" ] && dir="$(dirname "$dir")"; tmux new-window -c "$dir"' --confirm'''
+desc = "Open new tmux window in target directory"
