@@ -1,9 +1,10 @@
 #!/bin/bash
 # j — Jira CLI shortcuts with team defaults
-# Wraps jira-cli (ankitpokhrel) for the MSB project
+# Wraps jira-cli (ankitpokhrel). Config: ~/.config/j/config
 
-PROJECT="MSB"
-ASSIGNEE="iwan.dyke@dvla.gov.uk"
+CONFIG="${XDG_CONFIG_HOME:-$HOME/.config}/j/config"
+[ -f "$CONFIG" ] || { echo "Missing config: $CONFIG" >&2; exit 1; }
+source "$CONFIG"
 
 usage() {
     cat <<'EOF'
@@ -39,7 +40,8 @@ create_issue() {
     local type="$1" summary="$2" body="${3:-}" extra_args=("${@:4}")
     [ -z "$summary" ] && { echo "usage: j ${type,,} \"summary\" [\"description\"]" >&2; exit 1; }
 
-    local args=(-p"$PROJECT" -t"$type" -s"$summary" -a"$ASSIGNEE" -lGetSith --no-input)
+    local args=(-p"$PROJECT" -t"$type" -s"$summary" -a"$ASSIGNEE" --no-input)
+    for label in "${DEFAULT_LABELS[@]}"; do args+=(-l"$label"); done
     [ -n "$body" ] && args+=(-b"$(printf '%b' "$body")")
     args+=("${extra_args[@]}")
 
@@ -60,12 +62,12 @@ case "${1:-}" in
     start)  jira issue move "$2" "In Progress" ;;
     done)   jira issue move "$2" "Completed" ;;
 
-    mine)   jira issue list -pMSB -a"$ASSIGNEE" -q"sprint in openSprints()" ;;
-    all)    jira issue list -pMSB -a"$ASSIGNEE" -s~Completed -s~Discarded -s~Done ;;
+    mine)   jira issue list -p"$PROJECT" -a"$ASSIGNEE" -q"sprint in openSprints()" ;;
+    all)    jira issue list -p"$PROJECT" -a"$ASSIGNEE" -s~Completed -s~Discarded -s~Done ;;
     view)    jira issue view "$2" ;;
     open)    jira open "$2" ;;
     comment) jira issue comment add "$2" "$(printf '%b' "$3")" ;;
-    ls)     jira issue list -pMSB "${@:2}" ;;
+    ls)     jira issue list -p"$PROJECT" "${@:2}" ;;
 
     raw)    jira "${@:2}" ;;
     -h|--help|"") usage ;;
