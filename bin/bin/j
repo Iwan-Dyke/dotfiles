@@ -38,7 +38,7 @@ create_issue() {
     local type="$1" summary="$2" body="${3:-}" extra_args=("${@:4}")
     [ -z "$summary" ] && { echo "usage: j ${type,,} \"summary\" [\"description\"]" >&2; exit 1; }
 
-    local args=(-p"$PROJECT" -t"$type" -s"$summary" -a"$ASSIGNEE" --no-input)
+    local args=(-p"$PROJECT" -t"$type" -s"$summary" -a"$ASSIGNEE" -lGetSith --no-input)
     [ -n "$body" ] && args+=(-b"$body")
     args+=("${extra_args[@]}")
 
