@@ -32,7 +32,7 @@ sleep 1
 
 if [ "$SESSION" = "work" ]; then
     tmux send-keys -t "$SESSION:kiro" 'kiro-cli chat' Enter
-    tmux split-window -t "$SESSION:jira" -v -l 20%
+    tmux split-window -t "$SESSION:jira" -v -l 15%
     tmux send-keys -t "$SESSION:jira.0" 'jiratui ui' Enter
 else
     tmux send-keys -t "$SESSION:claude" 'claude' Enter
