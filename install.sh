@@ -64,7 +64,9 @@ backup_conflicts() {
             fi
         done < <(find "$DOTFILES_DIR/$pkg" -type f -not -path '*/.git/*')
     done
-    [ "$moved" -eq 0 ] && info "no pre-existing conflicts"
+    if [ "$moved" -eq 0 ]; then
+        info "no pre-existing conflicts"
+    fi
 }
 
 # ── Stow packages ────────────────────────────────────────────

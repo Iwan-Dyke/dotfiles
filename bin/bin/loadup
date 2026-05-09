@@ -27,7 +27,7 @@ if [ "$SESSION" = "work" ]; then
     tmux new-window -t "$SESSION" -n "docker"
 else
     tmux new-session -d -s "$SESSION" -n "terminal"
-    tmux new-window -t "$SESSION" -n "claude"
+    tmux new-window -t "$SESSION" -n "codex"
     tmux new-window -t "$SESSION" -n "yazi"
     tmux new-window -t "$SESSION" -n "docker"
 fi
@@ -48,18 +48,19 @@ if [ "$SESSION" = "work" ]; then
         wait_for_shell "$SESSION:$win"
     done
 else
-    for win in terminal claude yazi docker; do
+    for win in terminal codex yazi docker; do
         wait_for_shell "$SESSION:$win"
     done
 fi
 
-# Claude with session-appropriate credentials
-tmux send-keys -t "$SESSION:claude" "[ -f $CLAUDE_ENV ] && source $CLAUDE_ENV; claude" Enter
-
 if [ "$SESSION" = "work" ]; then
+    # Claude with session-appropriate credentials
+    tmux send-keys -t "$SESSION:claude" "[ -f $CLAUDE_ENV ] && source $CLAUDE_ENV; claude" Enter
     tmux send-keys -t "$SESSION:kiro" 'kiro-cli chat' Enter
     tmux split-window -t "$SESSION:jira" -v -l 10%
     tmux send-keys -t "$SESSION:jira.0" 'jiratui ui' Enter
+else
+    tmux send-keys -t "$SESSION:codex" 'codex' Enter
 fi
 
 tmux send-keys -t "$SESSION:yazi" 'yazi' Enter
