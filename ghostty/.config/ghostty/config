@@ -1,0 +1,32 @@
+# Font
+font-family = Departure Mono
+font-size = 18
+
+# Matrix colour scheme
+background = 000000
+foreground = 00ff41
+
+# ANSI colours (matrix greens)
+palette = 0=#000000
+palette = 1=#004D00
+palette = 2=#00ff41
+palette = 3=#7FFF00
+palette = 4=#003B00
+palette = 5=#00FF80
+palette = 6=#39FF14
+palette = 7=#B0FFB0
+palette = 8=#006600
+palette = 9=#00CC44
+palette = 10=#7FFF00
+palette = 11=#CCFF00
+palette = 12=#00AA44
+palette = 13=#66FFB2
+palette = 14=#00FFAA
+palette = 15=#ffffff
+
+# CRT shader
+custom-shader = /Users/iwandyke/.config/ghostty/shaders/crt.glsl
+
+# Window
+window-padding-x = 8
+window-padding-y = 8

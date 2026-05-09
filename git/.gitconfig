@@ -1,9 +1,10 @@
 [user]
 	name = Iwan Dyke
+	email = iwan.dyke@dvla.gov.uk
 [pull]
 	rebase = true
 [core]
-	autocrlf = input
+	autocrlf = true
 [init]
 	defaultBranch = main
 [rerere]

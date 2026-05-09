@@ -1,0 +1,38 @@
+#!/bin/bash
+set -euo pipefail
+
+BUILD_DIR="${HOME}/cool-retro-term-build"
+APP_DEST="/Applications/cool-retro-term.app"
+
+echo "==> Installing Qt6 via Homebrew (if needed)..."
+brew install qt@6
+
+echo "==> Setting up Qt6 paths..."
+QT_PREFIX="$(brew --prefix qt@6)"
+export PATH="${QT_PREFIX}/bin:${PATH}"
+
+echo "==> Cloning cool-retro-term..."
+rm -rf "${BUILD_DIR}"
+git clone --recursive https://github.com/Swordfish90/cool-retro-term.git "${BUILD_DIR}"
+cd "${BUILD_DIR}"
+
+echo "==> Building (native Apple Silicon / x86_64)..."
+qmake -config release
+make -j"$(sysctl -n hw.ncpu)"
+
+echo "==> Copying plugins..."
+mkdir -p cool-retro-term.app/Contents/PlugIns
+cp -r qmltermwidget/QMLTermWidget cool-retro-term.app/Contents/PlugIns/
+
+echo "==> Bundling Qt dependencies..."
+macdeployqt cool-retro-term.app -qmldir=app/qml
+
+echo "==> Installing to /Applications..."
+[ -d "${APP_DEST}" ] && rm -rf "${APP_DEST}"
+cp -R cool-retro-term.app "${APP_DEST}"
+
+echo "==> Cleaning up build directory..."
+rm -rf "${BUILD_DIR}"
+
+echo "✅ cool-retro-term installed natively to ${APP_DEST}"
+echo "   Launch it from Spotlight or: open '${APP_DEST}'"

@@ -1,5 +1,9 @@
 
 # Kiro CLI pre block. Keep at the top of this file.
+[[ -f "${HOME}/Library/Application Support/kiro-cli/shell/bashrc.pre.bash" ]] && builtin source "${HOME}/Library/Application Support/kiro-cli/shell/bashrc.pre.bash"
+
+
+# Kiro CLI pre block. Keep at the top of this file.
 [[ -f "${HOME}/.local/share/kiro-cli/shell/bashrc.pre.bash" ]] && builtin source "${HOME}/.local/share/kiro-cli/shell/bashrc.pre.bash"
 
 
@@ -305,3 +309,8 @@ sudo service cron status > /dev/null 2>&1 || sudo service cron start > /dev/null
 
 # Claude CLI auth (work)
 [ -f ~/.config/claude/work.env ] && source ~/.config/claude/work.env
+. "$HOME/.cargo/env"
+
+
+# Kiro CLI post block. Keep at the bottom of this file.
+[[ -f "${HOME}/Library/Application Support/kiro-cli/shell/bashrc.post.bash" ]] && builtin source "${HOME}/Library/Application Support/kiro-cli/shell/bashrc.post.bash"

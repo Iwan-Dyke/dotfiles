@@ -32,11 +32,29 @@ else
     tmux new-window -t "$SESSION" -n "docker"
 fi
 
-# Let shells initialise
-sleep 1
+# Wait for shell prompt to render in a pane
+wait_for_shell() {
+    local target="$1" i=0
+    while [ $i -lt 10 ]; do
+        tmux capture-pane -t "$target" -p 2>/dev/null | grep -q '.' && sleep 0.2 && return 0
+        sleep 0.3
+        i=$((i + 1))
+    done
+}
+
+# Wait for each window's shell to be ready
+if [ "$SESSION" = "work" ]; then
+    for win in jira yazi kiro claude terminal docker; do
+        wait_for_shell "$SESSION:$win"
+    done
+else
+    for win in terminal claude yazi docker; do
+        wait_for_shell "$SESSION:$win"
+    done
+fi
 
 # Claude with session-appropriate credentials
-tmux send-keys -t "$SESSION:claude" "source $CLAUDE_ENV && claude" Enter
+tmux send-keys -t "$SESSION:claude" "[ -f $CLAUDE_ENV ] && source $CLAUDE_ENV; claude" Enter
 
 if [ "$SESSION" = "work" ]; then
     tmux send-keys -t "$SESSION:kiro" 'kiro-cli chat' Enter
