@@ -1,9 +1,16 @@
 [user]
 	name = Iwan Dyke
+	email = iwan.dyke@dvla.gov.uk
+
+[includeIf "hasconfig:remote.*.url:https://github.com/**"]
+	path = ~/.gitconfig-personal
+
+[includeIf "hasconfig:remote.*.url:git@github.com:*/**"]
+	path = ~/.gitconfig-personal
 [pull]
 	rebase = true
 [core]
-	autocrlf = true
+	autocrlf = input
 [init]
 	defaultBranch = main
 [rerere]
