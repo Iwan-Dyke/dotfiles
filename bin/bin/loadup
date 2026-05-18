@@ -1,0 +1,71 @@
+#!/bin/bash
+# Load up the construct
+
+SESSION="${1:-general}"
+
+case "$SESSION" in
+    general|work) ;;
+    *) echo "usage: loadup [general|work]" >&2; exit 1 ;;
+esac
+
+# If session already exists, just attach
+tmux has-session -t "$SESSION" 2>/dev/null && {
+    tmux attach -t "$SESSION"
+    exit 0
+}
+
+# Credential env files (outside repo, 600 perms)
+CLAUDE_ENV="$HOME/.config/claude/${SESSION/general/home}.env"
+
+# Build the session
+if [ "$SESSION" = "work" ]; then
+    tmux new-session -d -s "$SESSION" -n "jira"
+    tmux new-window -t "$SESSION" -n "yazi"
+    tmux new-window -t "$SESSION" -n "kiro"
+    tmux new-window -t "$SESSION" -n "claude"
+    tmux new-window -t "$SESSION" -n "terminal"
+    tmux new-window -t "$SESSION" -n "docker"
+else
+    tmux new-session -d -s "$SESSION" -n "terminal"
+    tmux new-window -t "$SESSION" -n "codex"
+    tmux new-window -t "$SESSION" -n "yazi"
+    tmux new-window -t "$SESSION" -n "docker"
+fi
+
+# Wait for shell prompt to render in a pane
+wait_for_shell() {
+    local target="$1" i=0
+    while [ $i -lt 10 ]; do
+        tmux capture-pane -t "$target" -p 2>/dev/null | grep -q '.' && sleep 0.2 && return 0
+        sleep 0.3
+        i=$((i + 1))
+    done
+}
+
+# Wait for each window's shell to be ready
+if [ "$SESSION" = "work" ]; then
+    for win in jira yazi kiro claude terminal docker; do
+        wait_for_shell "$SESSION:$win"
+    done
+else
+    for win in terminal codex yazi docker; do
+        wait_for_shell "$SESSION:$win"
+    done
+fi
+
+if [ "$SESSION" = "work" ]; then
+    # Claude with session-appropriate credentials
+    tmux send-keys -t "$SESSION:claude" "[ -f $CLAUDE_ENV ] && source $CLAUDE_ENV; claude" Enter
+    tmux send-keys -t "$SESSION:kiro" 'kiro-cli chat' Enter
+    tmux split-window -t "$SESSION:jira" -v -l 10%
+    tmux send-keys -t "$SESSION:jira.0" 'jiratui ui' Enter
+else
+    tmux send-keys -t "$SESSION:codex" 'codex' Enter
+fi
+
+tmux send-keys -t "$SESSION:yazi" 'yazi' Enter
+tmux send-keys -t "$SESSION:docker" 'lazydocker' Enter
+
+# Start on the terminal window
+tmux select-window -t "$SESSION:terminal"
+tmux attach -t "$SESSION"

@@ -1,0 +1,83 @@
+# Matrix Theme Configuration
+format = "$username$hostname$directory$git_branch$git_status$python$nodejs$rust$golang$docker_context$aws$time$line_break$character"
+
+[username]
+show_always = true
+style_user = "bold #00ff41 bg:#001a00"
+style_root = "bold #ff0000 bg:#001a00"
+format = "[$user]($style) "
+
+[hostname]
+ssh_only = false
+style = "bold #00cc44 bg:#002200"
+format = "[@$hostname]($style) "
+
+[directory]
+style = "bold #39ff14 bg:#003300"
+format = "[$path]($style) "
+truncation_length = 4
+truncation_symbol = "…/"
+read_only = " 󰌾"
+
+[git_branch]
+symbol = " "
+style = "bold #00ff41 bg:#002200"
+format = "[$symbol$branch]($style)"
+
+[git_status]
+format = "[$all_status$ahead_behind]($style) "
+style = "bold #7fff00 bg:#004400"
+conflicted = "⚔️ "
+ahead = "⬆ ×${count} "
+behind = "⬇ ×${count} "
+diverged = "⬆×${ahead_count} ⬇×${behind_count} "
+untracked = "? ×${count} "
+stashed = "📦 "
+modified = "✎ ×${count} "
+staged = "✓ ×${count} "
+renamed = "» ×${count} "
+deleted = "✗ ×${count} "
+
+[python]
+symbol = " "
+style = "bold #00ff80 bg:#001a00"
+format = "[$symbol$pyenv_prefix$version]($style) "
+
+[nodejs]
+symbol = " "
+style = "bold #00cc44 bg:#002200"
+format = "[$symbol$version]($style) "
+
+[rust]
+symbol = " "
+style = "bold #39ff14 bg:#003300"
+format = "[$symbol$version]($style) "
+
+[golang]
+symbol = " "
+style = "bold #7fff00 bg:#002200"
+format = "[$symbol$version]($style) "
+
+[docker_context]
+symbol = " "
+style = "bold #00ff41 bg:#001a00"
+format = "[$symbol$context]($style) "
+
+[aws]
+symbol = "  "
+style = "bold #00ffaa bg:#002200"
+format = "[$symbol($profile)($region)]($style) "
+
+[time]
+disabled = false
+style = "bold #00ff41 bg:#002200"
+format = "[$time]($style) "
+time_format = "%H:%M"
+
+[line_break]
+disabled = false
+
+[character]
+success_symbol = "[❯](bold #00ff41)"
+error_symbol = "[❯](bold #ff0000)"
+vimcmd_symbol = "[❮](bold #39ff14)"
