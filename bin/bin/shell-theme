@@ -1,0 +1,40 @@
+#!/bin/bash
+# shell-theme — switch zsh greeting/aliases and Ghostty between themes
+# Usage: shell-theme [batman|matrix|show]
+
+THEME_FILE="${XDG_CONFIG_HOME:-$HOME/.config}/shell/theme"
+GHOSTTY_CONFIG="$(readlink -f "${XDG_CONFIG_HOME:-$HOME/.config}/ghostty/config" 2>/dev/null || echo "${XDG_CONFIG_HOME:-$HOME/.config}/ghostty/config")"
+
+mkdir -p "$(dirname "$THEME_FILE")"
+
+set_ghostty() {
+    local theme="$1"
+    if [[ ! -f "$GHOSTTY_CONFIG" ]]; then return; fi
+
+    if [[ "$theme" == "matrix" ]]; then
+        # Matrix: green theme + CRT shader
+        sed -i '' 's/^theme = .*/theme = matrix/' "$GHOSTTY_CONFIG"
+        grep -q '^custom-shader' "$GHOSTTY_CONFIG" || echo "custom-shader = shaders/crt.glsl" >> "$GHOSTTY_CONFIG"
+    else
+        # Batman: wayne-tech theme, no shader (crisp)
+        sed -i '' 's/^theme = .*/theme = Wayne-tech/' "$GHOSTTY_CONFIG"
+        sed -i '' '/^custom-shader/d' "$GHOSTTY_CONFIG"
+    fi
+}
+
+case "${1:-show}" in
+    batman|matrix)
+        echo "$1" > "$THEME_FILE"
+        set_ghostty "$1"
+        echo "Theme set to: $1"
+        echo "  → Ghostty: $(grep '^theme' "$GHOSTTY_CONFIG" 2>/dev/null)"
+        echo "  → Restart Ghostty and shell to apply fully"
+        ;;
+    show)
+        echo "Current theme: $(cat "$THEME_FILE" 2>/dev/null || echo batman)"
+        ;;
+    *)
+        echo "Usage: shell-theme [batman|matrix|show]" >&2
+        exit 1
+        ;;
+esac

@@ -1,13 +1,20 @@
 # Font
-font-family = Departure Mono
+font-family = Share Tech Mono
+font-family-bold = Share Tech Mono
+font-family-italic = Share Tech Mono
+font-family-bold-italic = Share Tech Mono
 font-size = 18
 
-# Theme (options: matrix, imperial, wayne-tech)
-theme = matrix
+# Nerd Font icons fallback
+font-family = Symbols Nerd Font Mono
 
-# CRT shader
-custom-shader = shaders/crt.glsl
+# Theme (options: matrix, imperial, wayne-tech)
+theme = Wayne-tech
 
 # Window
 window-padding-x = 8
 window-padding-y = 8
+
+# Cursor
+cursor-style = bar
+cursor-color = 5b8fbd
