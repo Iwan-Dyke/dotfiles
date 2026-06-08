@@ -9,7 +9,7 @@ font-size = 18
 font-family = Symbols Nerd Font Mono
 
 # Theme (options: matrix, imperial, wayne-tech)
-theme = Wayne-tech
+theme = skynet
 
 # Window
 window-padding-x = 8
@@ -17,4 +17,5 @@ window-padding-y = 8
 
 # Cursor
 cursor-style = bar
+cursor-style-blink = true
 cursor-color = 5b8fbd

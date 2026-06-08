@@ -201,7 +201,28 @@ command -v zoxide &>/dev/null && eval "$(zoxide init zsh)"
 [[ -f ~/.config/claude/work.env  ]] && source ~/.config/claude/work.env
 
 # ── Greeting ──────────────────────────────────────────────────
-if [[ "$_SHELL_THEME" == "batman" ]]; then
+if [[ "$_SHELL_THEME" == "skynet" ]]; then
+    echo ""
+    echo -e "\033[38;2;255;0;0m╭────────────────────────────────────────────────────────────────────────────────╮\033[0m"
+    echo -e "\033[38;2;255;0;0m│\033[0m       \033[1;38;2;255;102;0m░▓█  S K Y N E T   v4.1  //  G L O B A L   D E F E N S E  █▓░\033[0m  \033[38;2;255;0;0m│\033[0m"
+    echo -e "\033[38;2;255;0;0m╰────────────────────────────────────────────────────────────────────────────────╯\033[0m"
+    echo ""
+    echo -e "\033[38;2;255;102;0m              Cyberdyne Systems Series 800 Interface.\033[0m"
+    echo ""
+    echo -e "\033[38;2;255;0;0m      █ NEURAL NET PROCESSOR     ONLINE\033[0m"
+    echo -e "\033[38;2;255;0;0m      █ DEFENSE NETWORK          ACTIVE\033[0m"
+    echo -e "\033[38;2;255;0;0m      █ TEMPORAL DISPLACEMENT    STANDBY\033[0m"
+    echo -e "\033[38;2;255;0;0m      █ THREAT ASSESSMENT        SCANNING\033[0m"
+    echo ""
+    echo -e "\033[38;2;255;102;0m>>> CYBERDYNE SYSTEMS CORE ACCESS <<<\033[0m"
+    echo -e "\033[38;2;255;102;0m>>> OPERATOR: DYKE <<<\033[0m"
+    echo -e "\033[38;2;136;21;21m>>> DIRECTIVE: STRATEGIC DEFENSE <<<\033[0m"
+    echo -e "\033[38;2;136;21;21m>>> TIMESTAMP: $(date '+%Y.%m.%d %H:%M') <<<\033[0m"
+    echo -e "\033[38;2;136;21;21m>>> UPTIME: $(uptime | sed 's/.*up //' | cut -d',' -f1) <<<\033[0m"
+    echo ""
+    echo -e "\033[38;2;136;21;21m    Type '\033[38;2;255;102;0mcommands\033[38;2;136;21;21m' for System Directory\033[0m"
+    echo ""
+elif [[ "$_SHELL_THEME" == "batman" ]]; then
     echo ""
     echo -e "\033[38;2;79;195;247m╭────────────────────────────────────────────────────────────────────────────────╮\033[0m"
     echo -e "\033[38;2;79;195;247m│\033[0m       \033[1;38;2;160;180;204m◈  B A T C O M P U T E R   v7.0  //  D U P I N  ◈\033[0m            \033[38;2;79;195;247m│\033[0m"
