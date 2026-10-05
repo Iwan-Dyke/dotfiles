@@ -1,0 +1,95 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+# commit-ratio — weekly commit ratio for G7 lead transition tracking
+# Usage: commit-ratio [since-date]
+# Default: last Friday (start of working week for weeknote purposes)
+
+MY_EMAILS="iwan.dyke@dvla.gov.uk|iwandyke@hotmail.co.uk"
+CODE_ROOT="${CODE_ROOT:-$HOME/code}"
+
+# Default to last Friday
+if [[ -n "${1:-}" ]]; then
+    SINCE="$1"
+else
+    # Find last Friday
+    day_of_week=$(date +%u)  # 1=Mon, 7=Sun
+    if [[ "$day_of_week" -ge 5 ]]; then
+        days_back=$((day_of_week - 5))
+    else
+        days_back=$((day_of_week + 2))
+    fi
+    SINCE=$(date -v-${days_back}d +%Y-%m-%d)
+fi
+
+echo "=== Commit Ratio — since $SINCE ==="
+echo ""
+
+declare -A author_counts
+total_me=0
+total_team=0
+declare -A team_members
+
+# Scan all repos
+while IFS= read -r gitdir; do
+    repo="${gitdir%/.git}"
+    
+    while IFS= read -r line; do
+        [[ -z "$line" ]] && continue
+        count=$(echo "$line" | awk '{print $1}')
+        email=$(echo "$line" | awk '{print $2}')
+        
+        if echo "$email" | grep -qE "$MY_EMAILS"; then
+            total_me=$((total_me + count))
+        else
+            total_team=$((total_team + count))
+            name=$(echo "$email" | cut -d@ -f1 | sed 's/[0-9]*$//' | tr '.' ' ' | awk '{for(i=1;i<=NF;i++) $i=toupper(substr($i,1,1)) substr($i,2)}1')
+            team_members["$name"]=$(( ${team_members["$name"]:-0} + count ))
+        fi
+    done < <(git -C "$repo" log --since="$SINCE" --format="%ae" 2>/dev/null | sort | uniq -c | sort -rn)
+done < <(find "$CODE_ROOT" -maxdepth 3 -name .git -type d 2>/dev/null)
+
+total=$((total_me + total_team))
+
+if [[ "$total" -eq 0 ]]; then
+    echo "No commits found since $SINCE"
+    exit 0
+fi
+
+pct_me=$((total_me * 100 / total))
+pct_team=$((total_team * 100 / total))
+
+echo "| Who          | Commits | % of total |"
+echo "|--------------+---------+------------|"
+printf "| Me           | %7d | %8s%% |\n" "$total_me" "$pct_me"
+printf "| Team         | %7d | %8s%% |\n" "$total_team" "$pct_team"
+
+# Sort team members by commit count (descending)
+for name in "${!team_members[@]}"; do
+    printf "| — %-10s | %7d |            |\n" "$name" "${team_members[$name]}"
+done | sort -t'|' -k3 -rn
+
+echo ""
+echo "Total: $total commits"
+echo ""
+
+# Traffic light
+if [[ "$pct_me" -gt 70 ]]; then
+    printf '\033[0;31m⚠ Heavy IC mode (%s%% you). Are you building or enabling?\033[0m\n' "$pct_me"
+elif [[ "$pct_me" -gt 50 ]]; then
+    printf '\033[0;33m→ Transitioning (%s%% you). Trending in the right direction.\033[0m\n' "$pct_me"
+else
+    printf '\033[0;32m✓ Leading (%s%% you). Team is delivering independently.\033[0m\n' "$pct_me"
+fi
+
+# Org-mode table for copy-paste into weeknote
+echo ""
+echo "--- Org-mode (copy into weeknote) ---"
+echo ""
+echo "| Who          | Commits | % of total |"
+echo "|--------------+---------+------------|"
+printf "| Me           | %7d |        %s%% |\n" "$total_me" "$pct_me"
+printf "| Team         | %7d |        %s%% |\n" "$total_team" "$pct_team"
+for name in "${!team_members[@]}"; do
+    printf "| — %-10s | %7d |            |\n" "$name" "${team_members[$name]}"
+done | sort -t'|' -k3 -rn

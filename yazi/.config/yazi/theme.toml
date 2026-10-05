@@ -1,140 +1,140 @@
-# Skynet theme for yazi
-# Palette: bg=#0a0000, primary=#ff3030, mid=#cc2020, dk=#881515,
-#          accent=#ff8040, muted=#551010, subtle=#1a0808,
-#          white=#ffcccc, red=#ff0000, orange=#ff6600
+# Matrix theme for yazi
+# Palette: bg=#000000, primary=#00ff41, mid=#33ff77, dk=#00cc33,
+#          accent=#66ff99, muted=#006622, subtle=#001a00,
+#          white=#ffffff, red=#cc0000, orange=#ff6600
 
 [app]
-overall = { bg = "#0a0000" }
+overall = { bg = "#000000" }
 
 # ── File manager ──────────────────────────────────────────────
 [mgr]
-cwd             = { fg = "#ff6060", bold = true }
-find_keyword    = { fg = "#0a0000", bg = "#ff3030", bold = true }
-find_position   = { fg = "#881515", italic = true }
-symlink_target  = { fg = "#aa4040", italic = true }
-marker_copied   = { fg = "#cc2020" }
-marker_cut      = { fg = "#ff0000" }
-marker_marked   = { fg = "#ff6600" }
-marker_selected = { fg = "#ff3030" }
-count_copied    = { fg = "#0a0000", bg = "#cc2020" }
-count_cut       = { fg = "#0a0000", bg = "#ff0000" }
-count_selected  = { fg = "#0a0000", bg = "#ff3030" }
+cwd             = { fg = "#33ff77", bold = true }
+find_keyword    = { fg = "#000000", bg = "#00ff41", bold = true }
+find_position   = { fg = "#006622", italic = true }
+symlink_target  = { fg = "#00cc33", italic = true }
+marker_copied   = { fg = "#00cc33" }
+marker_cut      = { fg = "#cc0000" }
+marker_marked   = { fg = "#66ff99" }
+marker_selected = { fg = "#00ff41" }
+count_copied    = { fg = "#000000", bg = "#00cc33" }
+count_cut       = { fg = "#000000", bg = "#cc0000" }
+count_selected  = { fg = "#000000", bg = "#00ff41" }
 border_symbol   = "│"
-border_style    = { fg = "#551010" }
+border_style    = { fg = "#006622" }
 
 # ── Indicator bar ─────────────────────────────────────────────
 [indicator]
-parent  = { fg = "#551010", reversed = true }
-current = { fg = "#ffcccc", bg = "#1a0808", bold = true }
-preview = { fg = "#aa4040", underline = true }
+parent  = { fg = "#006622", reversed = true }
+current = { fg = "#ffffff", bg = "#001a00", bold = true }
+preview = { fg = "#00cc33", underline = true }
 
 # ── Tabs ──────────────────────────────────────────────────────
 [tabs]
-active   = { fg = "#0a0000", bg = "#ff3030", bold = true }
-inactive = { fg = "#881515", bg = "#140a0a" }
+active   = { fg = "#000000", bg = "#00ff41", bold = true }
+inactive = { fg = "#006622", bg = "#0a0a0a" }
 
 # ── Mode indicator ────────────────────────────────────────────
 [mode]
-normal_main = { fg = "#0a0000", bg = "#ff3030", bold = true }
-normal_alt  = { fg = "#ff3030", bg = "#1a0808" }
-select_main = { fg = "#0a0000", bg = "#ff6600", bold = true }
-select_alt  = { fg = "#ff6600", bg = "#1a0808" }
-unset_main  = { fg = "#0a0000", bg = "#ff0000", bold = true }
-unset_alt   = { fg = "#ff0000", bg = "#1a0808" }
+normal_main = { fg = "#000000", bg = "#00ff41", bold = true }
+normal_alt  = { fg = "#00ff41", bg = "#001a00" }
+select_main = { fg = "#000000", bg = "#66ff99", bold = true }
+select_alt  = { fg = "#66ff99", bg = "#001a00" }
+unset_main  = { fg = "#000000", bg = "#cc0000", bold = true }
+unset_alt   = { fg = "#cc0000", bg = "#001a00" }
 
 # ── Status bar ────────────────────────────────────────────────
 [status]
-overall        = { bg = "#0a0000" }
+overall        = { bg = "#000000" }
 sep_left       = { open = "", close = "" }
 sep_right      = { open = "", close = "" }
-perm_type      = { fg = "#ff3030", bold = true }
-perm_read      = { fg = "#cc2020" }
+perm_type      = { fg = "#00ff41", bold = true }
+perm_read      = { fg = "#00cc33" }
 perm_write     = { fg = "#ff6600" }
-perm_exec      = { fg = "#ff0000" }
-perm_sep       = { fg = "#551010" }
-progress_label = { fg = "#ffcccc", bold = true }
-progress_normal = { fg = "#ff3030", bg = "#1a0808" }
-progress_error  = { fg = "#ff0000", bg = "#1a0808" }
+perm_exec      = { fg = "#66ff99" }
+perm_sep       = { fg = "#006622" }
+progress_label = { fg = "#ffffff", bold = true }
+progress_normal = { fg = "#00ff41", bg = "#001a00" }
+progress_error  = { fg = "#cc0000", bg = "#001a00" }
 
 # ── Which-key popup ───────────────────────────────────────────
 [which]
 cols            = 3
-mask            = { bg = "#0a0000" }
-cand            = { fg = "#ff3030" }
-rest            = { fg = "#551010" }
-desc            = { fg = "#ff3030" }
+mask            = { bg = "#000000" }
+cand            = { fg = "#00ff41" }
+rest            = { fg = "#006622" }
+desc            = { fg = "#00cc33" }
 separator       = " → "
-separator_style = { fg = "#551010" }
+separator_style = { fg = "#006622" }
 
 # ── Confirm dialog ────────────────────────────────────────────
 [confirm]
-border = { fg = "#881515" }
-title  = { fg = "#ff3030", bold = true }
-body   = { fg = "#ff3030" }
-list   = { fg = "#ff3030" }
-btn_yes = { fg = "#0a0000", bg = "#ff3030", bold = true }
-btn_no  = { fg = "#0a0000", bg = "#ff0000", bold = true }
+border = { fg = "#006622" }
+title  = { fg = "#00ff41", bold = true }
+body   = { fg = "#00ff41" }
+list   = { fg = "#00ff41" }
+btn_yes = { fg = "#000000", bg = "#00ff41", bold = true }
+btn_no  = { fg = "#000000", bg = "#cc0000", bold = true }
 
 # ── Spot panel ────────────────────────────────────────────────
 [spot]
-border   = { fg = "#551010" }
-title    = { fg = "#ff3030", bold = true }
-tbl_col  = { fg = "#ff3030", reversed = true }
-tbl_cell = { fg = "#ff3030", reversed = true }
+border   = { fg = "#006622" }
+title    = { fg = "#00ff41", bold = true }
+tbl_col  = { fg = "#00ff41", reversed = true }
+tbl_cell = { fg = "#00ff41", reversed = true }
 
 # ── Notifications ─────────────────────────────────────────────
 [notify]
-title_info  = { fg = "#ff3030" }
+title_info  = { fg = "#00ff41" }
 title_warn  = { fg = "#ff6600" }
-title_error = { fg = "#ff0000" }
+title_error = { fg = "#cc0000" }
 
 # ── Pick menu ─────────────────────────────────────────────────
 [pick]
-border   = { fg = "#881515" }
-active   = { fg = "#0a0000", bg = "#ff3030", bold = true }
-inactive = { fg = "#ff3030" }
+border   = { fg = "#006622" }
+active   = { fg = "#000000", bg = "#00ff41", bold = true }
+inactive = { fg = "#00ff41" }
 
 # ── Input dialog ──────────────────────────────────────────────
 [input]
-border   = { fg = "#881515" }
-title    = { fg = "#ff3030", bold = true }
-value    = { fg = "#ffcccc" }
-selected = { fg = "#0a0000", bg = "#ff3030" }
+border   = { fg = "#006622" }
+title    = { fg = "#00ff41", bold = true }
+value    = { fg = "#ffffff" }
+selected = { fg = "#000000", bg = "#00ff41" }
 
 # ── Completion menu ───────────────────────────────────────────
 [cmp]
-border   = { fg = "#551010" }
-active   = { fg = "#0a0000", bg = "#ff3030" }
-inactive = { fg = "#ff3030" }
+border   = { fg = "#006622" }
+active   = { fg = "#000000", bg = "#00ff41" }
+inactive = { fg = "#00ff41" }
 
 # ── Tasks panel ───────────────────────────────────────────────
 [tasks]
-border  = { fg = "#551010" }
-title   = { fg = "#ff3030", bold = true }
-hovered = { fg = "#0a0000", bg = "#ff3030" }
+border  = { fg = "#006622" }
+title   = { fg = "#00ff41", bold = true }
+hovered = { fg = "#000000", bg = "#00ff41" }
 
 # ── Help panel ────────────────────────────────────────────────
 [help]
-on      = { fg = "#ff3030", bold = true }
-run     = { fg = "#cc2020" }
-desc    = { fg = "#aa4040" }
-hovered = { fg = "#0a0000", bg = "#ff3030" }
-footer  = { fg = "#551010" }
+on      = { fg = "#00ff41", bold = true }
+run     = { fg = "#00cc33" }
+desc    = { fg = "#33ff77" }
+hovered = { fg = "#000000", bg = "#00ff41" }
+footer  = { fg = "#006622" }
 
 # ── File type colours ─────────────────────────────────────────
 [filetype]
 rules = [
-    { url = "*/", fg = "#ff6060", bold = true },
-    { url = "*", is = "link",   fg = "#cc2020", italic = true },
-    { url = "*", is = "orphan", fg = "#ff0000", italic = true },
-    { url = "*", is = "exec", fg = "#ffcccc", bold = true },
-    { url = "*", is = "sock",  fg = "#881515" },
-    { url = "*", is = "fifo",  fg = "#881515" },
-    { url = "*", is = "block", fg = "#881515" },
-    { url = "*", is = "char",  fg = "#881515" },
-    { mime = "image/*",          fg = "#cc2020" },
-    { mime = "{audio,video}/*",  fg = "#881515" },
-    { mime = "application/pdf",  fg = "#cc2020" },
+    { url = "*/", fg = "#33ff77", bold = true },
+    { url = "*", is = "link",   fg = "#00cc33", italic = true },
+    { url = "*", is = "orphan", fg = "#cc0000", italic = true },
+    { url = "*", is = "exec", fg = "#ffffff", bold = true },
+    { url = "*", is = "sock",  fg = "#006622" },
+    { url = "*", is = "fifo",  fg = "#006622" },
+    { url = "*", is = "block", fg = "#006622" },
+    { url = "*", is = "char",  fg = "#006622" },
+    { mime = "image/*",          fg = "#00cc33" },
+    { mime = "{audio,video}/*",  fg = "#006622" },
+    { mime = "application/pdf",  fg = "#00cc33" },
     { mime = "application/{zip,rar,7z*,tar,gzip,xz,zstd,bzip*}", fg = "#ff6600" },
-    { url = "*", fg = "#ff3030" },
+    { url = "*", fg = "#00ff41" },
 ]

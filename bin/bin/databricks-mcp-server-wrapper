@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+# Wrapper to prevent databricks_mcp.log from polluting project directories.
+# The server hardcodes writing to databricks_mcp.log in CWD.
+cd "${DATABRICKS_MCP_LOG_DIR:-/tmp}" || cd /tmp
+exec uvx databricks-mcp-server "$@"

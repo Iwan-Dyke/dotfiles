@@ -1,34 +1,145 @@
 #!/bin/bash
-# shell-theme — switch zsh greeting/aliases and Ghostty between themes
+# shell-theme — switch the entire terminal stack between themes
 # Usage: shell-theme [batman|matrix|show]
+#
+# Switches: Ghostty, tmux, neovim, starship, FZF
+# Some changes require a restart (Ghostty, shell). Others apply live (tmux).
+
+set -euo pipefail
 
 THEME_FILE="${XDG_CONFIG_HOME:-$HOME/.config}/shell/theme"
 GHOSTTY_CONFIG="$(readlink -f "${XDG_CONFIG_HOME:-$HOME/.config}/ghostty/config" 2>/dev/null || echo "${XDG_CONFIG_HOME:-$HOME/.config}/ghostty/config")"
+STARSHIP_CONFIG="${XDG_CONFIG_HOME:-$HOME/.config}/starship.toml"
+NVIM_OPTIONS="$HOME/.config/nvim/lua/config/options.lua"
+ZSHRC="$HOME/dotfiles/zsh/.zshrc"
+TMUX_CONF="$HOME/dotfiles/tmux/.tmux.conf"
+
+# Starship palette files (stow source)
+STARSHIP_SRC="$HOME/dotfiles/starship/.config/starship.toml"
 
 mkdir -p "$(dirname "$THEME_FILE")"
 
+# ── Theme palettes ───────────────────────────────────────────
+# FZF colour strings
+FZF_BATMAN='--color=fg:#c9d1d9,bg:#0a0e14,hl:#5b8fbd,fg+:#e4ecf4,bg+:#1a1f2b,hl+:#6b9fcd,info:#56b6a2,prompt:#5b8fbd,pointer:#d4a959,marker:#d4a959,spinner:#56b6a2'
+FZF_MATRIX='--color=fg:#00ff41,bg:#000000,hl:#7FFF00,fg+:#B0FFB0,bg+:#0a2a0a,hl+:#33ffcc,info:#00cc66,prompt:#00ff41,pointer:#39FF14,marker:#39FF14,spinner:#00cc66'
+
+# ── Ghostty ──────────────────────────────────────────────────
 set_ghostty() {
     local theme="$1"
-    if [[ ! -f "$GHOSTTY_CONFIG" ]]; then return; fi
+    [[ -f "$GHOSTTY_CONFIG" ]] || return
 
     if [[ "$theme" == "matrix" ]]; then
-        # Matrix: green theme + CRT shader
         sed -i '' 's/^theme = .*/theme = matrix/' "$GHOSTTY_CONFIG"
-        grep -q '^custom-shader' "$GHOSTTY_CONFIG" || echo "custom-shader = shaders/crt.glsl" >> "$GHOSTTY_CONFIG"
+        sed -i '' 's/^cursor-color = .*/cursor-color = 00ff41/' "$GHOSTTY_CONFIG"
+        if ! grep -q '^custom-shader' "$GHOSTTY_CONFIG"; then
+            printf '\n# CRT shader\ncustom-shader = shaders/crt.glsl\ncustom-shader-animation = true\n' >> "$GHOSTTY_CONFIG"
+        fi
     else
-        # Batman: wayne-tech theme, no shader (crisp)
-        sed -i '' 's/^theme = .*/theme = Wayne-tech/' "$GHOSTTY_CONFIG"
+        sed -i '' 's/^theme = .*/theme = wayne-tech/' "$GHOSTTY_CONFIG"
+        sed -i '' 's/^cursor-color = .*/cursor-color = 5b8fbd/' "$GHOSTTY_CONFIG"
         sed -i '' '/^custom-shader/d' "$GHOSTTY_CONFIG"
     fi
 }
 
+# ── tmux ─────────────────────────────────────────────────────
+set_tmux() {
+    local theme="$1"
+    local tmux_theme
+    [[ "$theme" == "matrix" ]] && tmux_theme="matrix" || tmux_theme="wayne-tech"
+
+    # Update the source-file line in .tmux.conf
+    sed -i '' "s|^source-file ~/.tmux/themes/.*|source-file ~/.tmux/themes/${tmux_theme}.conf|" "$TMUX_CONF"
+
+    # Apply live if tmux is running
+    if command -v tmux &>/dev/null && tmux list-sessions &>/dev/null 2>&1; then
+        tmux source-file "$HOME/.tmux/themes/${tmux_theme}.conf" 2>/dev/null || true
+    fi
+}
+
+# ── Neovim ───────────────────────────────────────────────────
+set_nvim() {
+    local theme="$1"
+    local colorscheme
+    [[ "$theme" == "matrix" ]] && colorscheme="matrix" || colorscheme="wayne-tech"
+
+    sed -i '' "s/^vim.cmd.colorscheme(.*/vim.cmd.colorscheme('${colorscheme}')/" "$NVIM_OPTIONS"
+
+    # Send to running neovim instances
+    if command -v nvim &>/dev/null; then
+        for sock in /tmp/nvim.*/0 "$XDG_RUNTIME_DIR"/nvim.*.0 2>/dev/null; do
+            [[ -S "$sock" ]] && nvim --server "$sock" --remote-send ":colorscheme ${colorscheme}<CR>" 2>/dev/null || true
+        done
+    fi
+}
+
+# ── Starship ─────────────────────────────────────────────────
+set_starship() {
+    local theme="$1"
+    local target="$STARSHIP_SRC"
+    [[ -f "$target" ]] || return
+
+    if [[ "$theme" == "matrix" ]]; then
+        # Matrix: black bg, green phosphor
+        sed -i '' 's/#0a0e14/#000000/g; s/#1a1f2b/#0a2a0a/g' "$target"
+        sed -i '' 's/#5b8fbd/#00ff41/g; s/#6b9fcd/#7FFF00/g' "$target"
+        sed -i '' 's/#56b6a2/#00cc66/g; s/#6ec6b2/#33ffcc/g' "$target"
+        sed -i '' 's/#d4a959/#7FFF00/g' "$target"
+        sed -i '' 's/#4a5568/#2d6b2d/g' "$target"
+        sed -i '' 's/#c85060/#ff2020/g' "$target"
+        sed -i '' 's/#88c0d0/#39FF14/g' "$target"
+        sed -i '' 's/# Wayne-Tech Theme/# Matrix Theme/' "$target"
+    else
+        # Wayne-Tech: dark navy bg, steel blue
+        sed -i '' 's/#000000/#0a0e14/g; s/#0a2a0a/#1a1f2b/g' "$target"
+        sed -i '' 's/#00ff41/#5b8fbd/g; s/#7FFF00/#6b9fcd/g' "$target"
+        sed -i '' 's/#00cc66/#56b6a2/g; s/#33ffcc/#6ec6b2/g' "$target"
+        sed -i '' 's/#39FF14/#88c0d0/g' "$target"
+        sed -i '' 's/#2d6b2d/#4a5568/g' "$target"
+        sed -i '' 's/#ff2020/#c85060/g' "$target"
+        sed -i '' 's/# Matrix Theme/# Wayne-Tech Theme/' "$target"
+    fi
+}
+
+# ── FZF ──────────────────────────────────────────────────────
+set_fzf() {
+    local theme="$1"
+    local fzf_old fzf_new
+
+    if [[ "$theme" == "matrix" ]]; then
+        fzf_old="$FZF_BATMAN"
+        fzf_new="$FZF_MATRIX"
+    else
+        fzf_old="$FZF_MATRIX"
+        fzf_new="$FZF_BATMAN"
+    fi
+
+    # Escape for sed
+    local escaped_old escaped_new
+    escaped_old=$(printf '%s\n' "$fzf_old" | sed 's/[&/\]/\\&/g')
+    escaped_new=$(printf '%s\n' "$fzf_new" | sed 's/[&/\]/\\&/g')
+
+    sed -i '' "s|${escaped_old}|${escaped_new}|" "$ZSHRC"
+}
+
+# ── Main ─────────────────────────────────────────────────────
 case "${1:-show}" in
     batman|matrix)
         echo "$1" > "$THEME_FILE"
         set_ghostty "$1"
+        set_tmux "$1"
+        set_nvim "$1"
+        set_starship "$1"
+        set_fzf "$1"
         echo "Theme set to: $1"
-        echo "  → Ghostty: $(grep '^theme' "$GHOSTTY_CONFIG" 2>/dev/null)"
-        echo "  → Restart Ghostty and shell to apply fully"
+        echo ""
+        echo "  Ghostty  → $(grep '^theme' "$GHOSTTY_CONFIG" 2>/dev/null)"
+        echo "  tmux     → applied live (+ config updated)"
+        echo "  neovim   → $(grep 'colorscheme' "$NVIM_OPTIONS" 2>/dev/null | head -1)"
+        echo "  starship → updated (new shell to apply)"
+        echo "  FZF      → updated (new shell to apply)"
+        echo ""
+        echo "Restart Ghostty and open a new shell for full effect."
         ;;
     show)
         echo "Current theme: $(cat "$THEME_FILE" 2>/dev/null || echo batman)"

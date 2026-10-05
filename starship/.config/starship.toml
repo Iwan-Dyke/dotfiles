@@ -1,19 +1,19 @@
-# Skynet Theme Configuration
+# Matrix Theme Configuration
 format = "$username$hostname$directory$git_branch$git_status$python$nodejs$rust$golang$docker_context$aws$time$line_break$character"
 
 [username]
 show_always = true
-style_user = "bold #ff3030 bg:#0a0000"
-style_root = "bold #ff0000 bg:#0a0000"
+style_user = "bold #00ff41 bg:#000000"
+style_root = "bold #ff2020 bg:#000000"
 format = "[$user]($style) "
 
 [hostname]
 ssh_only = false
-style = "bold #cc2020 bg:#140a0a"
+style = "bold #2d6b2d bg:#000000"
 format = "[@$hostname]($style) "
 
 [directory]
-style = "bold #ff6060 bg:#1a0808"
+style = "bold #7FFF00 bg:#0a2a0a"
 format = "[$path]($style) "
 truncation_length = 4
 truncation_symbol = "…/"
@@ -21,12 +21,12 @@ read_only = " 󰌾"
 
 [git_branch]
 symbol = " "
-style = "bold #ff3030 bg:#140a0a"
+style = "bold #00cc66 bg:#0a2a0a"
 format = "[$symbol$branch]($style)"
 
 [git_status]
 format = "[$all_status$ahead_behind]($style) "
-style = "bold #cc2020 bg:#1a0808"
+style = "bold #33ffcc bg:#0a2a0a"
 conflicted = "⚔️ "
 ahead = "⬆ ×${count} "
 behind = "⬇ ×${count} "
@@ -40,37 +40,37 @@ deleted = "✗ ×${count} "
 
 [python]
 symbol = " "
-style = "bold #ff3030 bg:#0a0000"
+style = "bold #00ff41 bg:#0a2a0a"
 format = "[$symbol$pyenv_prefix$version]($style) "
 
 [nodejs]
 symbol = " "
-style = "bold #cc2020 bg:#140a0a"
+style = "bold #33ffcc bg:#0a2a0a"
 format = "[$symbol$version]($style) "
 
 [rust]
 symbol = " "
-style = "bold #ff3030 bg:#1a0808"
+style = "bold #ff2020 bg:#0a2a0a"
 format = "[$symbol$version]($style) "
 
 [golang]
 symbol = " "
-style = "bold #cc2020 bg:#140a0a"
+style = "bold #39FF14 bg:#0a2a0a"
 format = "[$symbol$version]($style) "
 
 [docker_context]
 symbol = " "
-style = "bold #ff3030 bg:#0a0000"
+style = "bold #00ff99 bg:#0a2a0a"
 format = "[$symbol$context]($style) "
 
 [aws]
 symbol = "  "
-style = "bold #ff3030 bg:#140a0a"
+style = "bold #80ff00 bg:#0a2a0a"
 format = "[$symbol($profile)($region)]($style) "
 
 [time]
 disabled = false
-style = "bold #ff3030 bg:#140a0a"
+style = "bold #2d6b2d"
 format = "[$time]($style) "
 time_format = "%H:%M"
 
@@ -78,6 +78,6 @@ time_format = "%H:%M"
 disabled = false
 
 [character]
-success_symbol = "[❯](bold #ff3030)"
-error_symbol = "[❯](bold #ff0000)"
-vimcmd_symbol = "[❮](bold #cc2020)"
+success_symbol = "[❯](bold #00ff41)"
+error_symbol = "[❯](bold #ff2020)"
+vimcmd_symbol = "[❮](bold #00cc66)"
